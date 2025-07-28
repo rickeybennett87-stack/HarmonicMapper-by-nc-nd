@@ -1,0 +1,12 @@
+
+image: openjdk:11
+
+pipelines:
+  default:
+    - name: Build APK from unzipped project
+      commands:
+        - apt-get update && apt-get install -y unzip
+        - unzip HarmonicMapper_GitHub_Repo.zip -d build_dir
+        - cd build_dir/HarmonicMapper
+        - chmod +x ./gradlew
+        - ./gradlew assembleDebug
