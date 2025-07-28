@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Harmonic Mapper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+      touch-action: none;
+    }
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="harmonic"></canvas>
+
+<script>
+const canvas = document.getElementById("harmonic");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let touches = [];
+let hue = 0;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  touches.forEach(t => {
+    ctx.beginPath();
+    ctx.arc(t.x, t.y, 40, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${(hue + t.id * 30) % 360}, 100%, 50%)`;
+    ctx.fill();
+  });
+
+  hue += 0.5;
+  requestAnimationFrame(draw);
+}
+
+canvas.addEventListener("touchstart", e => {
+  for (let i = 0; i < e.touches.length; i++) {
+    const t = e.touches[i];
+    touches.push({ id: t.identifier, x: t.clientX, y: t.clientY });
+  }
+});
+
+canvas.addEventListener("touchmove", e => {
+  e.preventDefault();
+  for (let i = 0; i < e.touches.length; i++) {
+    const t = e.touches[i];
+    const touch = touches.find(tch => tch.id === t.identifier);
+    if (touch) {
+      touch.x = t.clientX;
+      touch.y = t.clientY;
+    }
+  }
+}, { passive: false });
+
+canvas.addEventListener("touchend", e => {
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const t = e.changedTouches[i];
+    touches = touches.filter(tch => tch.id !== t.identifier);
+  }
+});
+
+draw();
+</script>
+</body>
+</html>

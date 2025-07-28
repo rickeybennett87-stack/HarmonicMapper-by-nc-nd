@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 language: java
 
 jdk:
@@ -9,3 +10,21 @@ script:
 artifacts:
   paths:
     - app/build/outputs/apk/debug/app-debug.apk
+=======
+image: jitpack/android
+
+before_install:
+  - echo "Starting JitCI Build for HarmonicMapper"
+
+  install:
+    - ./gradlew dependencies
+
+    build:
+      script:
+          - chmod +x ./gradlew
+              - ./gradlew assembleDebug
+
+              artifacts:
+                paths:
+                    - app/build/outputs/apk/debug/app-debug.apk
+>>>>>>> 8992e903a540a238d82b1a8fb010c33b7ab544ad
